@@ -30,7 +30,7 @@ def create_captcha_image(text):
 
 captcha_text = generate_captcha_text()
 root = tk.Tk()
-root.title("Motivational CAPTCHA Challenge")
+root.title("CRAZYCAPTCHA")
 root.geometry("400x550")
 root.configure(bg="#ffe5e5")
 
