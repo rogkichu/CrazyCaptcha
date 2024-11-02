@@ -1,7 +1,11 @@
 import tkinter as tk
 from PIL import Image, ImageDraw, ImageFont, ImageTk, ImageFilter
+import pyttsx3
 import random
 import string
+from threading import Thread
+
+engine = pyttsx3.init()
 
 def generate_captcha_text(length=5):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -30,9 +34,18 @@ def update_captcha():
     captcha_image_tk = ImageTk.PhotoImage(captcha_image)
     captcha_label.config(image=captcha_image_tk)
 
+def voice_feedback():
+    incorrect_phrases = ["Try again!", "Almost... not really!", "Incorrect CAPTCHA!"]
+    engine.say(random.choice(incorrect_phrases))
+    engine.runAndWait()
+
+def move_button():
+    x, y = random.randint(50, 250), random.randint(150, 250)
+    submit_button.place(x=x, y=y)
+
 # Initialize tkinter window
 root = tk.Tk()
-root.title("Enhanced CAPTCHA")
+root.title("Ultimate CAPTCHA")
 root.geometry("300x300")
 
 # Generate and display CAPTCHA
@@ -53,9 +66,12 @@ def check_captcha():
         result_label.config(text="CAPTCHA correct!", fg="green")
     else:
         result_label.config(text="Incorrect CAPTCHA! Try again.", fg="red")
+        Thread(target=voice_feedback).start()
+        move_button()
+        update_captcha()
 
 submit_button = tk.Button(root, text="Submit", command=check_captcha, font=("Arial", 12))
-submit_button.pack(pady=5)
+submit_button.place(x=100, y=200)
 
 refresh_button = tk.Button(root, text="Refresh CAPTCHA", command=update_captcha, font=("Arial", 12))
 refresh_button.pack(pady=5)
